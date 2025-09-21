@@ -1,8 +1,16 @@
 import "dotenv/config";
 import puppeteer, { Browser, Page } from "puppeteer";
+import fs from "fs";
 
 const LOGIN = process.env.LOGIN;
 const SENHA = process.env.SENHA;
+const COLECIONADORES_FILE = "./colecionadores.json";
+const DIAS_EXPIRACAO_COLECIONADORES_FILE = 1;
+
+type ColecionadoresSalvos = {
+  date: number;
+  colecionadores: string[];
+};
 
 class TrocaFigurinhas {
   readonly inicializado: Promise<void>;
@@ -84,20 +92,16 @@ class TrocaFigurinhas {
 
   async proximaPagina() {
     const tableId = "#ctl00_CPH_gvColecionadores";
-    console.log("Esperando achar a tabela");
 
     await this.page.waitForSelector(tableId);
-    console.log("Achei a tabela");
 
     const pageSelector = `${tableId} tr.gvPagerPadrao td:has(span) + td > a`;
 
     const nextPageLink = await this.page.$(pageSelector);
-    console.log("Procurei a próxima página");
 
     if (!nextPageLink) return false;
-    console.log("Achei a próxima página");
 
-    await this.wait(200);
+    await this.wait(500);
 
     try {
       await nextPageLink.click();
@@ -112,6 +116,9 @@ class TrocaFigurinhas {
   }
 
   async encontrarColecionadores(album: string) {
+    const salvosColecionadores = this.buscarSalvosColecionadores();
+    if (salvosColecionadores) return salvosColecionadores;
+
     await this.page.goto(
       "https://trocafigurinhas.com/colecionadores/localizar-colecionadores.html"
     );
@@ -122,14 +129,30 @@ class TrocaFigurinhas {
 
     do {
       const links = await this.obterLinksColecionadores();
-      console.log("Peguei todos os links dessa página");
-
       linksColecionadores.push(...links);
-      console.log("Adicionei os links da página no vetor");
     } while (await this.proximaPagina());
-    console.log("Parei de procurar novas páginas");
+
+    this.salvarColecionadores(linksColecionadores);
 
     return linksColecionadores;
+  }
+
+  salvarColecionadores(colecionadores: string[]) {
+    const colecionadoresJson: ColecionadoresSalvos = { date: new Date().getTime(), colecionadores };
+    fs.writeFileSync(COLECIONADORES_FILE, JSON.stringify(colecionadoresJson, null, 4));
+  }
+
+  buscarSalvosColecionadores() {
+    if (!fs.existsSync(COLECIONADORES_FILE)) return null;
+
+    const salvos: ColecionadoresSalvos = require(COLECIONADORES_FILE);
+
+    const dataSalvos = new Date(salvos.date);
+    dataSalvos.setDate(dataSalvos.getDate() + DIAS_EXPIRACAO_COLECIONADORES_FILE);
+
+    if (dataSalvos > new Date()) return salvos.colecionadores;
+
+    return null;
   }
 }
 
