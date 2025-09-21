@@ -1,0 +1,2402 @@
+﻿body,
+div,
+tr,
+input {
+   border-style: none;
+   font-family: Verdana, Arial, Helvetica, sans-serif;
+   font-size: 11px;
+   font-weight: normal;
+   font-style: normal;
+   font-variant: normal;
+   text-transform: none;
+   color: #000;
+}
+
+body {
+   margin: 0 0 20px 0;
+   border: 0 solid #f0f;
+   background-image: url(../../../../Imagens/Interface/Fundo.jpg);
+   background-repeat: repeat;
+   width: 100%;
+   text-align: center;
+}
+
+a {
+   font-family: Verdana, Arial, Tahoma;
+   color: #ccc;
+   font-weight: bold;
+   text-decoration: none;
+}
+
+a:link,
+a:visited {
+   color: #f88c40;
+}
+
+a:hover {
+   color: #3e87a8;
+}
+
+p {
+   margin-bottom: 25px;
+}
+
+fieldset {
+   padding: 7px;
+   display: block;
+}
+
+legend {
+   color: #888;
+   display: block;
+   margin-bottom: 10px;
+}
+
+ul {
+   line-height: 23px;
+}
+
+img {
+   border: 0;
+}
+
+h2 {
+   padding: 0;
+   margin: 0;
+   font-size: 13px;
+}
+
+h3 {
+   padding: 0;
+   margin: 0;
+   font-size: 11px;
+}
+
+#progressBackgroundFilter {
+   position: fixed;
+   top: 0;
+   bottom: 0;
+   left: 0;
+   right: 0;
+   overflow: hidden;
+   padding: 0;
+   margin: 0;
+   background-color: #000;
+   filter: alpha(opacity=50);
+   opacity: .5;
+   z-index: 10000;
+}
+
+#processMessage {
+   position: fixed;
+   top: 30%;
+   left: 30%;
+   padding: 10px;
+   background-color: #fff;
+   border: solid 2px #000;
+   width: 40%;
+   height: 30%;
+   z-index: 100001;
+   font-size: 17px;
+   font-weight: normal;
+   text-align: center;
+   color: #000;
+}
+
+#progressBackgroundFilterRestricao {
+   position: fixed;
+   top: 0;
+   bottom: 0;
+   left: 0;
+   right: 0;
+   overflow: hidden;
+   padding: 0;
+   margin: 0;
+   background-color: #000;
+   filter: alpha(opacity=50);
+   opacity: .5;
+   z-index: 100000;
+}
+
+#processRestricao {
+   position: fixed;
+   top: 25%;
+   left: 25%;
+   padding: 10px;
+   background-color: #fff;
+   border: solid 20px #ccc;
+   width: 500px;
+   height: 300px;
+   z-index: 100001;
+   font-size: 11px;
+   text-align: left;
+   font-weight: normal;
+   color: #000;
+   overflow-y: auto;
+}
+
+#processRestricao {
+   _position: absolute;
+   _top: expression(document.compatMode=="CSS1Compat" ? document.documentElement.scrollTop+50+"px":body.scrollTop+50+"px");
+}
+
+#progressBackgroundFilterRestricao {
+   _position: absolute;
+   _width: 1500px;
+   _height: 2000px;
+}
+
+.DivPrincipal {
+   position: relative;
+   width: 1200px !important;
+   margin: 30px auto;
+   text-align: left;
+   border: 0;
+   padding: 0;
+   background-image: url(../../../../Imagens/Interface/Fundo.jpg);
+   background-repeat: repeat;
+}
+
+.DivCorpo {
+   width: 1000px;
+   float: left;
+   background-image: url(../../../../Imagens/Interface/FundoColunaFalsa.jpg);
+   background-repeat: repeat;
+   margin-right: 20px;
+}
+
+.DivTopo {
+   width: 100%;
+   margin: 0;
+   float: left;
+   margin-right: 20px;
+}
+
+.DivHome {
+   position: absolute;
+   top: 20px;
+   left: 60px;
+   width: 67px;
+   height: 41px;
+}
+
+.Publicidade {
+   float: left;
+   margin: 47px 0 0 0;
+}
+
+.DivLateralEsquerda {
+   float: left;
+   width: 237px;
+   background-image: url(../../../../Imagens/Interface/FundoLateralEsquerda.jpg);
+   background-repeat: repeat;
+}
+
+.DivAreaTrabalho {
+   background-image: url(../../../../Imagens/Interface/FundoAreaTrabalho.jpg);
+   background-position: right top;
+   background-repeat: no-repeat;
+   background-color: #fff;
+   float: left;
+   width: 717px;
+   border: 0 solid #f0f;
+   min-height: 1000px;
+}
+
+.DivAreaTrabalhoInterna {
+   margin: 20px;
+}
+
+.DivLateralDireita {
+   float: left;
+   width: 40px;
+   height: 100%;
+}
+
+.DivRodape {
+   width: 100%;
+   clear: both;
+}
+
+.DivIdiomas {
+   margin: 5px 0 0 50px;
+   position: absolute;
+}
+
+.Negrito {
+   font-weight: bold;
+}
+
+.Detalhe {
+   font-size: 10px;
+   color: #888;
+}
+
+.Titulo {
+   font-size: 13px;
+   font-weight: bold;
+}
+
+.LinkAlternativo {
+   font-family: Verdana, Arial, Tahoma;
+   color: #ccc;
+   font-weight: bold;
+   text-decoration: none;
+   font-size: 11px;
+}
+
+.LinkAlternativo:link,
+.LinkAlternativo:visited {
+   color: #2078a6;
+   font-size: 11px;
+}
+
+.LinkAlternativo:hover {
+   color: #f60;
+}
+
+.LinkFiltro {
+   font-family: Verdana, Arial, Tahoma;
+   color: #777;
+   font-weight: bold;
+   text-decoration: none;
+   font-size: 11px;
+}
+
+.LinkFiltro:link,
+.LinkFiltro:visited {
+   color: #777;
+   font-size: 11px;
+}
+
+.LinkFiltro:hover {
+   color: #bcbcbc;
+}
+
+.TextBox {
+   border: 1px solid #369;
+   padding: 3px 2px;
+   background-color: #F0FCFF;
+}
+
+.TextFiltrar {
+   border: 1px solid #808080;
+   padding: 2px;
+   background: #f4f4f4;
+}
+
+.TextBoxFiltrar {
+   border: 1px solid #369;
+}
+
+.TextBoxMultiLine {
+   border: 1px solid #369;
+   padding: 3px;
+   background-color: #F0FCFF;
+}
+
+.RadioButton {
+   border: 0;
+}
+
+.DropDownList {
+   border: 1px solid #369;
+   padding: 2px;
+   background-color: #F0FCFF;
+}
+
+.Button {
+   border: 1px solid #369;
+   border-radius: 5px;
+   background: url('../../../../Imagens/Interface/button-bg.png');
+   color: #095177;
+   font-weight: bold;
+   padding: 3px 8px;
+}
+
+.Button:hover {
+   color: #F77C22;
+}
+
+.ButtonYes {
+   border: 1px solid #369;
+   background-color: #037fb5;
+   color: #fff;
+   font-weight: bold;
+   padding: 3px 8px;
+}
+
+.ButtonNo {
+   border: 1px solid #369;
+   background-color: #c30;
+   color: #fff;
+   font-weight: bold;
+   padding: 3px 8px;
+}
+
+.ButtonCinza {
+   border: 1px solid #369;
+   background-color: #ccc;
+   color: #000;
+   font-weight: bold;
+   padding: 3px 8px;
+}
+
+.ButtonCinzaClaro {
+   border: 1px solid #369;
+   background-color: #dedede;
+   color: #555;
+   font-weight: bold;
+   padding: 3px 8px;
+}
+
+.ButtonDisabled {
+   border: 1px solid #369;
+   background-color: #bbb;
+   color: #fff;
+   font-weight: bold;
+   padding: 3px;
+}
+
+.ButtonPgtoClube,
+.ButtonPgtoClube:link,
+.ButtonPgtoClube:hover,
+.ButtonPgtoClube:visited {
+   border: 1px solid #2b5580;
+   background-color: #0d8aba;
+   color: #fff;
+   font-weight: bold;
+   padding: 5px;
+}
+
+.FileUpload {
+   border: 1px solid #369;
+   background-color: #ccf;
+   color: #036;
+   font-weight: bold;
+}
+
+.pnlMsgRetorno {
+   width: 80%;
+   border: solid 1px #999;
+   background-color: #ffeee8;
+   margin: 30px;
+   padding: 10px;
+   position: relative;
+}
+
+.pnlMsgRetornoImg {
+   float: left;
+   position: relative;
+   margin: -10px 10px 0 0; //margin:-5px10px00;}
+
+   .pnlMsgRetornoTexto {
+      position: relative;
+      margin: 10px; //margin:20px000;}
+
+      .CaixaFlutuante {
+         color: #4d4d4d;
+         position: absolute;
+         display: none;
+         padding: 13px;
+         background-color: #f2f2f2;
+         border: solid 1px #8f8f8f;
+         z-index: 10000;
+      }
+
+      .MsgErro {
+         color: #900;
+         font-weight: bold;
+         font-size: 11px;
+      }
+
+      .MsgSucesso {
+         color: #009;
+         font-weight: bold;
+         font-size: 11px;
+      }
+
+      .Gridview {
+         border: solid 1px #ccc;
+      }
+
+      .Gridview td {
+         border: solid 1px #ccc;
+         padding: 3px;
+         font-size: 11px;
+      }
+
+      .Gridview th {
+         border: solid 1px #ccc;
+         padding: 3px;
+         background-color: #f0f0f0;
+         font-size: 11px;
+      }
+
+      .gvHeaderStylePadrao {
+         font-family: Arial, Tahoma, Verdana;
+         font-size: 12px;
+         font-weight: bold;
+         background-color: #e8efff;
+      }
+
+      .gvHeaderStylePadrao a,
+      .gvHeaderStylePadrao a:Link {
+         font-size: 12px;
+         color: #036;
+      }
+
+      .gvHeaderStylePadrao a:hover {
+         font-size: 12px;
+         color: #f60;
+      }
+
+      .gvRowStylePadrao {
+         font-size: 11px;
+         color: #000;
+         padding: 2px;
+      }
+
+      .gvAlternatingRowStylePadrao {
+         font-size: 11px;
+         background-color: #f2f7fc;
+         border: solid 1px #000;
+         color: black;
+      }
+
+      .gvSelectedRowStylePadrao {
+         font-size: 11px;
+         font-weight: bold;
+         background-color: #fff;
+      }
+
+      .gvFooterStylePadrao td {
+         font-size: 11px;
+         font-weight: bold;
+         padding: 3px;
+         color: #555;
+         background-color: #e8efff;
+         border: solid 1px #f00;
+      }
+
+      .gvPadrao {
+         margin-bottom: 3px;
+      }
+
+      .gvAlternatingRowStylePadrao td,
+      .gvRowStylePadrao td,
+      .gvHeaderStylePadrao th,
+      .gvSelectedRowStylePadrao td,
+      .gvFooterStylePadrao td,
+      .gvPagerPadrao,
+      .gvPadrao {
+         border: solid 1px #ccc;
+         padding-left: 3px;
+         padding-right: 3px;
+         padding-top: 5px;
+         padding-bottom: 5px;
+      }
+
+      .gvPagerPadrao td table tr td a {
+         font-size: 11px;
+         color: #009;
+         font-weight: normal;
+         text-decoration: none;
+         border: solid 1px #aaa;
+         background-color: #eee;
+         padding-left: 4px;
+         padding-right: 4px;
+      }
+
+      .gvPagerPadrao td table tr td a:hover {
+         font-size: 11px;
+         color: #009;
+         font-weight: normal;
+         text-decoration: none;
+         border: solid 1px #333;
+         background-color: #fff;
+         padding-left: 4px;
+         padding-right: 4px;
+      }
+
+      .gvPagerPadrao td table tr td span {
+         font-size: 12px;
+         color: #009;
+         font-weight: bold;
+         text-decoration: none;
+         border: solid 1px #888;
+         background-color: #fff;
+         padding-left: 4px;
+         padding-right: 4px;
+      }
+
+      .DivAba {
+         height: 98px;
+         padding-left: 2px;
+         margin-bottom: 2px;
+      }
+
+      .DivAba input,
+      .DivAba img,
+      .DivAbaUltima input,
+      .DivAbaUltima img {
+         padding: 0 10px 0 10px;
+      }
+
+      .DivAbaUltima {
+         height: 110px;
+         padding-left: 2px;
+      }
+
+      .DivML {
+         margin: 0 0 10px 30px;
+      }
+
+      .ItemML {
+         margin-bottom: 5px;
+         padding-bottom: 3px;
+         border-bottom: solid 1px #dedede;
+         width: 80%;
+      }
+
+      .ItemMLDisable {
+         color: #888;
+         font-weight: bold;
+         font-size: 11px;
+      }
+
+      .ItemMLSeta {
+         float: left;
+         margin: 5px 2px 0 0;
+      }
+
+      a.MLLink:link,
+      a.MLLink:visited {
+         font-size: 11px;
+      }
+
+      .MLTituloAreaIcone {
+         margin: -25px 0 0 -10px;
+      }
+
+      .MLTituloArea {
+         margin: -20px 0 0 24px;
+         color: #3e87a8;
+         font-size: 11px;
+         font-weight: bold;
+      }
+
+      .MLTituloAreaContainer {
+         margin-bottom: 25px;
+      }
+
+      .PendenciaTituloAreaIcone {
+         margin: -25px 0 0 -5px;
+      }
+
+      .PendenciaTituloArea {
+         margin: -15px 0 0 25px;
+         color: #3e87a8;
+         font-size: 11px;
+         font-weight: bold;
+      }
+
+      .DivLogOut input {
+         position: absolute;
+         top: 0;
+         left: 859px;
+      }
+
+      .DivConfig {
+         position: absolute;
+         top: 10px;
+         left: 790px;
+      }
+
+      .DivPerfil {
+         position: absolute;
+         top: 46px;
+         left: 748px;
+         height: 150px;
+         border: 0 solid #f9b27b;
+         width: 238px;
+      }
+
+      .DivFundoNomeUsuario {
+         position: absolute;
+         z-index: 0;
+      }
+
+      .DivNomeUsuario {
+         position: absolute;
+         z-index: 1;
+         top: 5px;
+         left: 23px;
+      }
+
+      .DivAvatar {
+         position: absolute;
+         width: 53px;
+         top: 30px;
+         left: 15px;
+         border: solid 1px #ccc;
+         text-align: center;
+      }
+
+      .DivQualificacao {
+         position: absolute;
+         top: 35px;
+         left: 90px;
+      }
+
+      .DivSeparadorLogin1 {
+         position: absolute;
+         top: 38px;
+         left: 125px;
+      }
+
+      .DivSeparadorLogin2 {
+         position: absolute;
+         top: 38px;
+         left: 180px;
+      }
+
+      .DivStatus {
+         position: absolute;
+         top: 35px;
+         left: 140px;
+      }
+
+      .DivRolePerfil {
+         position: absolute;
+         top: 32px;
+         left: 193px;
+      }
+
+      .DivPresenca {
+         position: absolute;
+         top: 70px;
+         left: 79px;
+      }
+
+      .DivInfoDoacao {
+         position: relative;
+         top: 107px;
+         left: 20px;
+         width: 200px;
+      }
+
+      .DivQtdFiguretas {
+         position: relative;
+         top: 110px;
+         left: 10px;
+         width: 220px;
+      }
+
+      .DivQtdFiguretas img {
+         position: relative;
+         margin-left: 5px;
+         border: 0;
+      }
+
+      .DivRenovaDoacao {
+         position: relative;
+         top: 120px;
+         left: 10px;
+         width: 220px;
+      }
+
+      .DivRenovaDoacao img {
+         position: relative;
+         margin-left: 5px;
+         border: 0;
+      }
+
+      .TextoDoacao {
+         color: #f88c40;
+      }
+
+      .TextoRenovarDoacao {
+         color: #3e87a8;
+         font-size: 11px;
+         font-weight: bold;
+         font-style: italic;
+      }
+
+      .LoginUsuario {
+         color: #fff;
+         font-weight: bold;
+         font-size: 12px;
+         letter-spacing: 1px;
+      }
+
+      .DivEnquete {
+         margin: 0 20px 0 20px;
+      }
+
+      .EnqueteTituloAreaIcone {
+         margin: -28px 0 0 5px;
+      }
+
+      .EnqueteTituloArea {
+         margin: -20px 0 0 34px;
+         color: #3e87a8;
+         font-size: 11px;
+         font-weight: bold;
+      }
+
+      .EnqueteContainer {
+         width: 100%;
+         margin-top: 15px;
+      }
+
+      .EnqueteContainer .b1,
+      .EnqueteContainer .b2,
+      .EnqueteContainer .b3,
+      .EnqueteContainer .b4 {
+         display: block;
+         overflow: hidden;
+         font-size: 1px;
+      }
+
+      .EnqueteContainer .b1,
+      .EnqueteContainer .b2,
+      .EnqueteContainer .b3 {
+         height: 1px;
+      }
+
+      .EnqueteContainer .b2,
+      .EnqueteContainer .b3,
+      .EnqueteContainer .b4 {
+         background: #f7f7f7;
+         border-left: 1px solid #dedede;
+         border-right: 1px solid #dedede;
+      }
+
+      .EnqueteContainer .b1 {
+         margin: 0 5px;
+         background: #dedede;
+      }
+
+      .EnqueteContainer .b2 {
+         margin: 0 3px;
+         border-width: 0 2px;
+      }
+
+      .EnqueteContainer .b3 {
+         margin: 0 2px;
+      }
+
+      .EnqueteContainer .b4 {
+         height: 2px;
+         margin: 0 1px;
+      }
+
+      .EnqueteContainer .conteudo {
+         padding: 5px;
+         display: block;
+         background: #f7f7f7;
+         border-left: 1px solid #dedede;
+         border-right: 1px solid #dedede;
+      }
+
+      .Respostas input {
+         float: left;
+      }
+
+      .Respostas label {
+         font-size: 11px;
+         width: 155px;
+         float: left;
+         margin-bottom: 5px;
+         margin-top: 3px;
+      }
+
+      .Pergunta {
+         font-size: 11px;
+         color: #919494;
+         font-weight: bold;
+         text-align: center;
+      }
+
+      .Botoes {
+         margin: 5px 0 5px 0;
+         text-align: center;
+      }
+
+      .Botoes input {
+         background-color: #c3c3c3;
+         border: solid 1px #bbb;
+         font-family: Verdana, Arial, Tahoma;
+         font-size: 11px;
+         font-weight: bold;
+         text-transform: uppercase;
+         color: #fff;
+      }
+
+      .PerguntaDestaque {
+         font-size: 13px;
+         font-weight: bold;
+         color: #3e87a8;
+         margin: 10px 0 15px 0;
+         border: 0 solid #000;
+      }
+
+      .Presenca {
+         position: relative;
+         width: 151px;
+         border-top: solid 1px #006599;
+      }
+
+      .PresencaData {
+         position: relative;
+         width: 151px;
+         top: 0;
+      }
+
+      .P,
+      .PP {
+         font-size: 1px;
+         width: 9px;
+         height: 10px;
+         margin: 0;
+         background-color: #f58220;
+         border-right: solid 1px #006599;
+         border-bottom: solid 1px #006599;
+         float: right;
+      }
+
+      .A,
+      .AA {
+         font-size: 1px;
+         width: 9px;
+         height: 10px;
+         margin: 0;
+         background-color: #fff;
+         border-right: solid 1px #006599;
+         border-bottom: solid 1px #006599;
+         float: right;
+      }
+
+      .PP,
+      .AA {
+         border-left: solid 1px #006599;
+      }
+
+      .DiaInicial {
+         font-family: Tahoma, Verdana, Arial;
+         font-size: 9px;
+         color: #3e87a8;
+         float: left;
+      }
+
+      .DiaFinal {
+         font-family: Tahoma, Verdana, Arial;
+         font-size: 9px;
+         color: #3e87a8;
+         float: right;
+      }
+
+      .DivContentLogin {
+         position: absolute;
+         left: 750px;
+         top: 45px;
+         width: 235px;
+         height: 170px;
+      }
+
+      .DivIconeLogin {
+         position: absolute;
+         top: 27px;
+         left: 13px;
+         height: 30px;
+         width: 25px;
+         z-index: 0;
+      }
+
+      .DivIconeLoginProgress {
+         position: absolute;
+         top: 27px;
+         left: 13px;
+         z-index: 1;
+         height: 30px;
+         width: 25px;
+         background-color: #fff;
+      }
+
+      .DivCxLogin {
+         position: absolute;
+         top: 20px;
+         left: 50px;
+         z-index: 5;
+         border: solid 0px #000;
+      }
+
+      .DivMeninaLoginBalao {
+         position: absolute;
+         top: 15px;
+         left: 40px;
+         z-index: 1;
+      }
+
+      .DivMeninaLogin {
+         position: absolute;
+         left: 7px;
+         top: 67px;
+         z-index: 0;
+      }
+
+      .DivEsqueciSenha {
+         position: absolute;
+         left: 138px;
+         top: 120px;
+         z-index: 3;
+      }
+
+      .DivQueroMeCadastrar {
+         position: absolute;
+         left: 115px;
+         top: 90px;
+         z-index: 3;
+      }
+
+      .DivErro {
+         position: absolute;
+         top: 18px;
+         left: 40px;
+         width: 154px;
+         padding: 0 3px 0 3px;
+         z-index: 2;
+         text-align: center;
+      }
+
+      div.DivErro div {
+         font-size: 10px;
+      }
+
+      .TextBoxLogin {
+         font-family: Verdana, Arial, Helvetica, sans-serif;
+         font-size: 10px;
+         color: #000;
+         background-color: #e5e4e3;
+         border: 1px solid #f9b27b;
+         height: 11px;
+      }
+
+      .LabelLogin {
+         font-family: Verdana, Arial, Helvetica, sans-serif;
+         font-size: 11px;
+         color: #000;
+      }
+
+      .ButtonLogin {
+         font-family: Verdana, Arial, Helvetica, sans-serif;
+         font-size: 10px;
+         font-weight: bold;
+         color: #fff;
+         padding: 1px;
+         background-color: #919191;
+      }
+
+      .Link,
+      .Link:link,
+      .Link:visited,
+      .Link:active {
+         font-size: 10px;
+      }
+
+      .DivMenuPrincipal {
+         position: absolute;
+         top: 215px;
+         left: 50px;
+         z-index: 1000;
+      }
+
+      .IE8Fix {
+         z-index: 1000;
+      }
+
+      .DivContentBusca {
+         position: absolute;
+         top: 218px;
+         left: 665px;
+         color: #f88c40;
+         font-size: 13px;
+         font-weight: bold;
+         border: 0 solid #000;
+         width: 310px;
+      }
+
+      .ImgBusca {
+         position: absolute;
+         margin: 0 0 0 8px;
+      }
+
+      .TextBusca {
+         position: relative;
+         left: 40px;
+         border: 1px solid #e2d1c3;
+         background-color: #f9f7f7;
+         height: 12px;
+      }
+
+      .ButtonBusca {
+         position: relative;
+         left: 40px;
+         border: 1px solid #c38958;
+         background-color: #919191;
+         color: #fff;
+         font-size: 10px;
+         font-weight: bold;
+         padding: 0;
+         height: 17px;
+      }
+
+      .DivContent {
+         width: 660px;
+         margin-top: -20px;
+      }
+
+      .DivTituloInterno {
+         height: 30px;
+      }
+
+      .DivImagem {
+         position: relative;
+         margin: 5px 0 0 0;
+         top: 50%;
+         float: right;
+      }
+
+      .DivTitulo {
+         position: relative;
+         top: 50%;
+         font-size: 11px;
+         margin: 0 0 0 8px;
+         float: right;
+         color: #2078a6;
+         font-weight: bold;
+      }
+
+      .DivLinhaDivisoria {
+         height: 6px;
+         width: 100%;
+         font-size: 1px;
+         background-repeat: repeat;
+         margin: 2px 0 10px 0;
+      }
+
+      .PerfilLogin {
+         color: #000;
+         font-weight: bold;
+         font-size: 18px;
+         letter-spacing: 1px;
+      }
+
+      .PerfilEmListas {
+         width: 160px;
+      }
+
+      .PerfilEmListas img {
+         float: left;
+         margin-right: 10px;
+      }
+
+      .PerfilRecado span {
+         color: #c30;
+         position: relative;
+      }
+
+      .Perfil-Nivel {
+         position: relative;
+         text-align: center;
+         margin: 0 20px 20px 0;
+         float: left;
+      }
+
+      .Perfil-Nivel-Image {
+         border: solid 1px #f88c40;
+         padding: 20px 10px 20px 10px;
+         width: 80px;
+      }
+
+      .Perfil-Nivel-Nome {
+         width: 80px;
+         text-align: center;
+         border: solid 1px #f88c40;
+         padding: 10px 10px 10px 10px;
+      }
+
+      .Perfil-Nivel-Descricao {
+         vertical-align: top;
+         width: 450px;
+         margin: 0 30px 0 0;
+         text-align: justify;
+      }
+
+      .Perfil-Nivel-Pontuacao {
+         position: relative;
+         clear: both;
+      }
+
+      .Filtro {
+         width: 140px;
+         text-align: left;
+         cursor: pointer;
+      }
+
+      .Filtro .b1,
+      .Filtro .b2,
+      .Filtro .b3,
+      .Filtro .b4 {
+         display: block;
+         overflow: hidden;
+         font-size: 1px;
+      }
+
+      .Filtro .b1,
+      .Filtro .b2,
+      .Filtro .b3 {
+         height: 1px;
+      }
+
+      .Filtro .b2,
+      .Filtro .b3,
+      .Filtro .b4 {
+         background-position: #b4b4b4;
+         background: #419BC0;
+         border-left: 1px solid #dedede;
+         border-right: 1px solid #dedede;
+      }
+
+      .Filtro .b1 {
+         margin: 0 2px;
+         background: #dedede;
+      }
+
+      .Filtro .b2 {
+         margin: 0 1px;
+         border-width: 0 1px;
+      }
+
+      .Filtro .b3 {
+         margin: 0;
+      }
+
+      .Filtro .b4 {
+         height: 2px;
+         margin: 0;
+      }
+
+      .Filtro .conteudo {
+         padding: 2px 5px;
+         display: block;
+         background: #f7f7f7;
+         border-left: 1px solid #dedede;
+         border-right: 1px solid #dedede;
+         border-bottom: 1px solid #dedede;
+      }
+
+      .Filtro-Container {
+         width: 96%;
+         background-color: #f7f7f7;
+         border: solid 1px #dedede;
+         margin-top: -2px;
+         text-align: left;
+         padding: 10px 10px;
+      }
+
+      .Filtro-Linha {
+         width: 98%;
+         height: 1px;
+         border-top: solid 2px #dedede;
+      }
+
+      .DescricaoArea {
+         font-family: Arial, Verdana, Tahoma, Times New Roman;
+         font-size: 13px;
+         line-height: 18px;
+      }
+
+      #ContadorTextArea {
+         width: 40px;
+         height: 23px;
+         color: #aaa;
+         font-size: 22px;
+         font-family: Arial, Verdana;
+         text-align: center;
+      }
+
+      .PainelErro,
+      .PainelSucesso {
+         border: dashed 1px #ccc;
+         padding: 5px;
+         width: 99%;
+         margin: 10px 0;
+      }
+
+      .PainelErro {
+         background-color: #fffeec;
+         color: #c30;
+      }
+
+      .PainelErro span {
+         color: #c30;
+         font-weight: bold;
+      }
+
+      .PainelSucesso span {
+         color: #039;
+         font-weight: bold;
+      }
+
+      .PainelSucesso {
+         background-color: #eaf4ff;
+         color: #039;
+      }
+
+      .ListSearchExtenderPrompt {
+         font-size: 11px;
+         color: #555;
+         margin-bottom: 3px;
+      }
+
+      .Album-Home {
+         border: solid 1px #3e87a8;
+         padding: 3px;
+      }
+
+      .Albuns-Popup-NomeAlbum {
+         font-size: 18px;
+         color: #06678C;
+         font-weight: bold;
+      }
+
+      .AlbumDestaque {
+         font-size: 13px;
+         font-weight: bold;
+         color: #333;
+      }
+
+      .Album-Detalhe {
+         border: solid 1px #3e87a8;
+         padding: 3px;
+         margin: 0 23px 15px 20px;
+      }
+
+      .Album-Selecao-ListaTodos {
+         background-position: padding:2px;
+         border: 1px solid #369;
+         background: padding:2px;
+         background-color: #ffe7ce;
+         font-size: 15px;
+         color: #333;
+      }
+
+      .Album-Selecao-ListaIncompletos {
+         border: 1px solid #369;
+         background: padding:2px;
+         background-color: #f0f8ff;
+         font-size: 15px;
+         color: #404040;
+      }
+
+      .Album-Selecao-ListaCompletos {
+         border: 1px solid #000;
+         background: padding:2px;
+         background-color: #efefef;
+         font-size: 15px;
+         color: #404040;
+      }
+
+      .Album-Selecao-Detalhes {
+         position: absolute;
+         left: 130px;
+         top: 20px;
+         font-size: 13px;
+         line-height: 35px;
+      }
+
+      .Album-Selecao-TrocarAlbum {
+         position: absolute;
+         left: 380px;
+         bottom: 20px;
+      }
+
+      .OpcaoValorNacional {
+         border: 1px solid #999;
+         background-color: #ffc;
+         padding: 10px;
+      }
+
+      .OpcaoValorNacional span {
+         font-size: 10px;
+      }
+
+      .OpcaoValorInternacional {
+         border: 1px solid #999;
+         background-color: #FFFF9F;
+         padding: 10px;
+      }
+
+      .Plano-Content {}
+
+      .Plano-Content span {
+         font-weight: bold;
+         font-size: 16px;
+         text-align: center;
+      }
+
+      .Planos-Container div {
+         cursor: pointer;
+      }
+
+      .Planos-Container div:hover {
+         border: 3px solid #000;
+      }
+
+      .Plano4 {
+         border: 3px solid #ccc;
+         float: left;
+         padding: 10px;
+         background-color: #f39d3f;
+         height: 270px;
+         width: 130px;
+         margin-right: 10px;
+      }
+
+      .Plano3 {
+         border: 3px solid #ccc;
+         float: left;
+         padding: 10px;
+         background-color: #FFCC99;
+         height: 270px;
+         width: 130px;
+         margin-right: 10px;
+      }
+
+      .Plano2 {
+         border: 3px solid #ccc;
+         float: left;
+         padding: 10px;
+         background-color: #FCECBC;
+         height: 270px;
+         width: 130px;
+         margin-right: 10px;
+      }
+
+      .Plano1 {
+         border: 3px solid #ccc;
+         float: left;
+         padding: 10px;
+         background-color: #FFFFEA;
+         height: 270px;
+         width: 130px;
+         margin-right: 10px;
+      }
+
+      /*PLANOS DO CLUBE
+.OpcaoValorNacional { border: 1px solid #999999; background-color: #FFFFCC; padding: 10px; }
+.OpcaoValorNacional span { font-size: 10px; }
+.OpcaoValorInternacional { border: 1px solid #999999; background-color: #FFFF9F; padding: 10px; }
+*/
+
+      .LinkPropagandaBalao,
+      .LinkPropagandaBalao:link {
+         text-decoration: none;
+         font-weight: normal;
+         color: #2078a6;
+      }
+
+      .LinkPropagandaBalao:hover {
+         text-decoration: underline;
+      }
+
+      .PropagandaBalaoTexto {
+         position: absolute;
+         width: 150px;
+         height: 40px;
+         text-align: center;
+         margin: 2px 0 0 38px;
+         line-height: 12px;
+      }
+
+      .PropagandaBalaoContainer {
+         float: left;
+         margin: 0 10px 0 0;
+      }
+
+      .AlertaPresente {
+         border: 1px solid #808080;
+         background-color: #FFEBD7;
+         padding: 5px;
+         margin: 10px 0 10px 0;
+      }
+
+      .Positivo {
+         color: #0000CC;
+      }
+
+      .Negativo {
+         color: #CC0000;
+      }
+
+      .Neutro {
+         color: #FF9966;
+      }
+
+      .AreaRestrita-Titulo {
+         font-size: 15px;
+         color: #3e87a8;
+         font-weight: bold;
+      }
+
+      .AreaRestrita-Descricao {
+         color: #3e87a8;
+         font-size: 13px;
+         font-weight: bold;
+      }
+
+      /*Perfil*/
+      .PerfilListas-Content {
+         width: 192px;
+         position: relative;
+         border: solid 0px #000000;
+      }
+
+      .PerfilListas-Content-Info {
+         position: relative;
+         border: solid 0px #0ff000;
+         height: 50px;
+         margin-bottom: 5px;
+      }
+
+      .PerfilListas-Content-Avatar {
+         position: relative;
+         border: 1px solid #999999;
+         margin-right: 2px;
+         width: 55px;
+         height: 50px;
+         float: left;
+         text-align: center;
+      }
+
+      .PerfilListas-Content-Avatar input {
+         margin: auto;
+      }
+
+      .PerfilListas-Content-Login {
+         position: relative;
+         border: solid 0px #0000FF;
+         float: left;
+         margin: 25px 0 0px -60px;
+         padding: 0;
+      }
+
+      .PerfilListas-Content-Presenca {
+         position: relative;
+         margin: 0;
+         height: 20px;
+      }
+
+      .LoginPerfil {
+         position: relative;
+         font-size: 14px;
+         font-weight: bold;
+      }
+
+      .LoginPerfilPeq {
+         position: relative;
+         font-size: 12px;
+         font-weight: bold;
+      }
+
+      .EnderecoPerfil {}
+
+      .PerfilListas-Content-Qualificacao {
+         position: relative;
+         float: left;
+         margin: 8px 0 0 -2px;
+      }
+
+      .PerfilListas-Content-Status {
+         position: relative;
+         float: left;
+         margin: 0 3px;
+      }
+
+      .PerfilListas-Content-OnLine {
+         position: relative;
+         float: left;
+         margin: -2px 3px 0 0;
+      }
+
+      .PerfilListas-Content-Role {
+         position: relative;
+         float: left;
+         margin: -3px 3px 0 0;
+      }
+
+      .PerfilListas-Content-Ferramenta {
+         position: relative;
+         margin-top: 5px;
+      }
+
+      .PerfilListas-Figurinhas,
+      .PerfilListas-MensagemPrivada,
+      .PerfilListas-Trocas,
+      .PerfilListas-Favoritos,
+      .PerfilListas-Bloqueados,
+      .PerfilListas-Bloqueados-on,
+      .PerfilListas-Presente,
+      .PerfilListas-Favoritos-on {
+         background: url(../../../../imagens/interface/iconesperfil.png) no-repeat 0px 0px;
+         width: 20px;
+         height: 21px;
+         float: left;
+         display: block;
+         margin-right: 5px;
+      }
+
+      .PerfilListas-MensagemPrivada {
+         background-position: -20px 0px;
+         width: 25px;
+      }
+
+      .PerfilListas-Trocas {
+         background-position: -45px 0px;
+      }
+
+      .PerfilListas-Favoritos {
+         background: none;
+         height: 18px;
+      }
+
+      .PerfilListas-Favoritos-on {
+         background: none;
+         height: 18px;
+      }
+
+      .PerfilListas-Bloqueados {
+         background: none;
+      }
+
+      .PerfilListas-Bloqueados-on {
+         background: none;
+      }
+
+      .PerfilListas-Presente {
+         background-position: -105px 0px;
+         width: 21px;
+      }
+
+      /*ÁLBUNS*/
+      .Albuns div {
+         position: relative;
+         border: solid 1px #3e87a8;
+         padding: 3px;
+         margin: 0 23px 15px 20px;
+      }
+
+      .Albuns-Popup {
+         font-family: Verdana, Arial, Tahoma;
+         color: #000000;
+         font-size: 12px;
+      }
+
+      .Albuns-Popup-NomeAlbum {
+         font-size: 18px;
+         color: #336600;
+         font-weight: bold;
+      }
+
+      .Albuns-Popup-Negrito {
+         font-weight: bold;
+      }
+
+      .LinkAlbumSelecionado:Link,
+      .LinkAlbumSelecionado:visited {
+         font-family: Verdana, Arial, Tahoma;
+         font-size: 12px;
+         color: #387CA9;
+         font-weight: bold;
+         text-decoration: none;
+      }
+
+      .LinkAlbumSelecionado:hover {
+         font-family: Verdana, Arial, Tahoma;
+         font-size: 12px;
+         color: #F68C40;
+         font-weight: bold;
+         text-decoration: none;
+      }
+
+      /*FIGURINHAS*/
+      .F {
+         font-family: Arial, Tahoma, Verdana;
+         font-size: 10px;
+         border: 1px solid #aaaaaa;
+         width: 33px;
+         height: 18px;
+      }
+
+      /*Figurinhas Desejadas Vazia*/
+      .FDV {
+         font-family: Arial, Tahoma, Verdana;
+         font-size: 10px;
+         color: #000000;
+         border: solid 1px #cccccc;
+         background-color: #efefff;
+         cursor: pointer;
+         text-align: center;
+         width: 44px;
+         height: 18px;
+      }
+
+      /*Figurinhas Repetida Vazia*/
+      .FRV {
+         font-family: Arial, Tahoma, Verdana;
+         font-size: 10px;
+         color: #000000;
+         border: solid 1px #cccccc;
+         background-color: #ffefef;
+         cursor: pointer;
+         text-align: center;
+         width: 44px;
+         height: 18px;
+      }
+
+      /*Quadro de Figurinhas Desejadas*/
+      .FD {
+         font-family: Arial, Tahoma, Verdana;
+         font-size: 10px;
+         color: #FFFFFF;
+         border: solid 1px #cccccc;
+         background-color: #6666FF;
+         cursor: pointer;
+         text-align: center;
+         width: 44px;
+         height: 18px;
+      }
+
+      /*Quadro de Figurinhas Repetidas*/
+      .FR {
+         font-family: Arial, Tahoma, Verdana;
+         font-size: 10px;
+         color: #FFFFFF;
+         border: solid 1px #cccccc;
+         background-color: #FF6666;
+         cursor: pointer;
+         text-align: center;
+         width: 44px;
+         height: 18px;
+      }
+
+      /*Quadro de Figurinhas desabilitado*/
+      .FRD {
+         font-family: Arial, Tahoma, Verdana;
+         font-size: 10px;
+         color: #FFFFFF;
+         border: solid 1px #cccccc;
+         background-color: #FF6666;
+         cursor: default;
+         text-align: center;
+         width: 44px;
+         height: 18px;
+      }
+
+      /*Quadro de Figurinhas Vazio desabilitado*/
+      .FRVD {
+         font-family: Arial, Tahoma, Verdana;
+         font-size: 10px;
+         color: #000000;
+         border: solid 1px #cccccc;
+         background-color: #ffefef;
+         cursor: default;
+         text-align: center;
+         width: 44px;
+         height: 18px;
+      }
+
+      /*Figurinhas Desejadas Vazia*/
+      .FDD {
+         font-family: Arial, Tahoma, Verdana;
+         font-size: 10px;
+         color: #FFFFFF;
+         border: solid 1px #cccccc;
+         background-color: #6666FF;
+         cursor: default;
+         text-align: center;
+         width: 44px;
+         height: 18px;
+      }
+
+      /*Figurinhas Desejadas Vazia Desabilitado*/
+      .FDVD {
+         font-family: Arial, Tahoma, Verdana;
+         font-size: 10px;
+         color: #000000;
+         border: solid 1px #cccccc;
+         background-color: #efefff;
+         cursor: default;
+         text-align: center;
+         width: 44px;
+         height: 18px;
+      }
+
+      /*Quadro de Figurinhas para Troca Repetidas*/
+      .FTR {
+         font-family: Arial, Tahoma, Verdana;
+         font-size: 12px;
+         color: #000000;
+         border: solid 1px #cccccc;
+         background-color: #ffefef;
+         cursor: default;
+         text-align: center;
+      }
+
+      /*Figurinhas Desejadas Vazia*/
+      .FTD {
+         font-family: Arial, Tahoma, Verdana;
+         font-size: 12px;
+         color: #000000;
+         border: solid 1px #cccccc;
+         background-color: #efefff;
+         cursor: default;
+         text-align: center;
+      }
+
+
+
+      /*AJUDA*/
+      .Ajuda-Texto {
+         color: #555555;
+      }
+
+      .Ajuda-Texto-Titulo {
+         font-size: 14px;
+         font-weight: bold;
+         padding: 5px 0;
+      }
+
+      .Ajuda-Texto-Destaque {
+         color: #990000;
+      }
+
+      /*CONTEUDO TROCA*/
+      .PanelConteudoTroca {
+         border: 2px solid #333333;
+         background-color: #EBFAFF;
+         height: 350px;
+         width: 650px;
+         z-index: 1000;
+         left: 50%;
+         top: 30%;
+         margin-left: -325px;
+         overflow: auto;
+      }
+
+      .ConteudoTrocaTitulo {
+         font-size: 13px;
+         font-weight: bold;
+         color: #FFFFFF;
+         padding: 4px 0 0 5px;
+      }
+
+      .ConteudoTrocaBarraTop {
+         height: 26px;
+         background-color: #8DAABA;
+         border-bottom: solid 1px #cccccc;
+         width: 100%;
+      }
+
+      .ConteudoTrocaContent {
+         margin: 10px 20px 0 20px;
+      }
+
+      .ConteudoTrocaBotaoFechar {
+         text-align: right;
+         margin: -15px 5px 0 0;
+         position: relative;
+      }
+
+      /*FÓRUM*/
+      .ForumListaMensagens {
+         margin: 0 10px 0 20px;
+         clear: both;
+      }
+
+      .ForumMensagemPerfil {
+         border: solid 0px #cffccc;
+         margin: 10px 3px 3px 10px;
+      }
+
+      .ForumMensagemComentario {
+         position: relative;
+         padding: 10px;
+         float: left;
+         border: solid 0px #cccccc;
+      }
+
+      .ForumMensagemDataCitar {
+         position: relative;
+         float: right;
+         width: 75px;
+         border: solid 0px #ffcccc;
+      }
+
+      .ForumMensagemData {
+         color: #ab774d;
+         font-size: 9px;
+         margin-top: 5px;
+      }
+
+      .ForumMensagemCitar {
+         height: 40px;
+         border: solid 0px #cccccc;
+      }
+
+      .ForumMensagemCitarImg {
+         float: left;
+         margin-top: 13px;
+      }
+
+      .ForumMensagemCitarTexto {
+         float: left;
+         margin: 13px 0 0 3px;
+      }
+
+      .ForumMensagemCitarTextoLink,
+      .ForumMensagemCitarTextoLink:visited,
+      .ForumMensagemCitarTextoLink:link {
+         color: #3a3737;
+         font-weight: normal;
+      }
+
+      .ForumMensagemCitarTextoLink:hover {
+         color: #888888;
+         font-weight: normal;
+      }
+
+      .ForumRaizMensagem {
+         float: left;
+         border: solid 0px #ffcccc;
+      }
+
+      .ForumRaizTema {
+         position: relative;
+         left: 20px;
+         width: 600px;
+      }
+
+      .ForumRaizTopico {
+         position: relative;
+         top: 0;
+         left: 70px;
+         width: 600px;
+      }
+
+      .ForumMensagemIncluirMensagemBottom {
+         position: relative;
+         text-align: right;
+         background-repeat: no-repeat;
+         background-position: right;
+         height: 50px;
+         margin: 0px 15px 0 0;
+      }
+
+      .ForumMensagemIncluirMensagem {
+         position: relative;
+         float: right;
+         width: 275px;
+         border: solid 0px #ffcccc;
+         background-repeat: no-repeat;
+         background-position: right;
+         height: 50px;
+         margin: -15px 34px 0 0;
+      }
+
+      .ForumMensagemIncluirMensagemImg {
+         float: right;
+         margin-top: 17px;
+      }
+
+      .ForumMensagemIncluirMensagemTexto {
+         float: right;
+         margin: 17px 27px 0 3px;
+      }
+
+      .ForumMensagemIncluirMensagemLink,
+      .ForumMensagemIncluirMensagemLink:visited,
+      .ForumMensagemIncluirMensagemLink:link {
+         color: #3a3737;
+         font-weight: normal;
+      }
+
+      .ForumMensagemIncluirMensagemLink:hover {
+         color: #888888;
+         font-weight: normal;
+      }
+
+      .ForumMensagemResposta {
+         margin: 10px 0 0 40px;
+      }
+
+      .DivCitacao {
+         border: 1px dashed #7D8CD4;
+         padding: 10px;
+         margin: 10px;
+         background-color: #f9f9f9;
+         width: 90%;
+      }
+
+      .DivCitacaoLogin {
+         margin: -8px 0 0 -8px;
+         padding-left: 18px;
+         background-repeat: no-repeat;
+         background-position: left;
+      }
+
+      Blockquote {
+         border: 1px dashed #7D8CD4;
+         padding: 5px 10px 10px 10px;
+         margin: 10px;
+         background-color: #f9f9f9;
+         width: 90%;
+      }
+
+      Blockquote cite {
+         display: block;
+         margin: 0 0 5px -6px;
+         padding: 0 0 0 18px;
+         background-repeat: no-repeat;
+         background-position: left;
+         background-image: url("/imagens/interface/forum/aspas.gif");
+      }
+
+      .ForumListaTopicosGrid {
+         position: relative;
+      }
+
+      .ForumListaTopicos {
+         position: relative;
+         margin: 10px 10px 0 30px;
+         clear: both;
+      }
+
+      .ForumTopicoNovo {
+         position: relative;
+         float: right;
+         width: 275px;
+         border: solid 0px #ffcccc;
+         background-repeat: no-repeat;
+         background-position: right;
+         height: 50px;
+         margin: -30px 22px 0 0;
+      }
+
+      .ForumTopicoNovoBottom {
+         position: relative;
+         text-align: right;
+         width: 150px;
+         border: solid 0px #ffcccc;
+         background-repeat: no-repeat;
+         background-position: right;
+         height: 50px;
+         margin: 0px 0px 0 800px;
+      }
+
+      .ForumTopicoNovoImg {
+         float: right;
+         margin-top: 17px;
+      }
+
+      .ForumTopicoNovoTexto {
+         float: right;
+         margin: 17px 27px 0 3px;
+      }
+
+      .ForumTopicoForm {
+         margin: 10px 0 0 45px;
+      }
+
+      .TextBoxDestaque {
+         border: 1px solid #336699;
+         height: 20px;
+         font-size: 14px;
+         background-color: #9EBEF5;
+         font-weight: bold;
+      }
+
+      .TextoDestaque {
+         font-weight: bold;
+         font-size: 13px;
+      }
+
+      .gvRowStylePadraoMensagem td {
+         border: solid 1px #f68121;
+      }
+
+      .gvAlternatingRowStylePadraoMensagem td {
+         background: #F7FAFD;
+         border: solid 1px #f68121;
+      }
+
+      /*
+.gvHeaderStylePadrao th { font-family: Arial, Tahoma, Verdana; border: solid 1px #ccc; font-size: 13px; font-weight: bold; background-color: #4C8DC7; padding: 5px 3px; color: #FFF; }
+.gvRowStylePadrao td, .gvAlternatingRowStylePadrao td, .gvRowStylePadraoMensagem td, .gvAlternatingRowStylePadraoMensagem td { padding: 2px; padding: 5px 3px; border:1px solid #ccc;}
+.gvAlternatingRowStylePadrao, .gvAlternatingRowStylePadraoMensagem { background: #F7FAFD; }
+.gvRowStylePadraoMensagem td, .gvAlternatingRowStylePadraoMensagem td {border:solid 1px #f68121;}
+
+.gvPagerPadrao td table tr td a { font-size: 11px; color: #009; font-weight: normal; text-decoration: none; border: solid 1px #aaa; background-color: #eee; padding-left: 4px; padding-right: 4px; }
+.gvPagerPadrao td table tr td a:hover { font-size: 11px; color: #009; font-weight: normal; text-decoration: none; border: solid 1px #333; background-color: #FFF; padding-left: 4px; padding-right: 4px; }
+.gvPagerPadrao td table tr td span { font-size: 12px; color: #009; font-weight: bold; text-decoration: none; border: solid 1px #888; background-color: #FFF; padding-left: 4px; padding-right: 4px; }
+*/
+
+      /*QUALIFICACAO*/
+      .DivContentNivel {
+         border: solid 0px #000000;
+         vertical-align: top;
+         top: -20px;
+      }
+
+      .DivSimbolo {
+         position: relative;
+         border: solid 1px #f88c40;
+         padding: 20px 20px 20px 20px;
+         margin: 0 5px 0 0;
+         text-align: center;
+      }
+
+      .DivSimbolo img {
+         margin-top: 2px;
+      }
+
+      .DivNome {
+         width: 84px;
+         text-align: center;
+         border: solid 1px #f88c40;
+         padding: 5px 0 5px 0;
+         margin-bottom: 50px;
+      }
+
+      .DivSimboloNome {
+         position: relative;
+         float: left;
+      }
+
+      .TextoNomeSimbolo {
+         font-size: 12px;
+         color: #3e87a8;
+         font-weight: bold;
+      }
+
+      .DivDescricaoSimbolo {
+         border: solid 0px #f88c40;
+         vertical-align: top;
+         float: left;
+         width: 200px;
+         margin: 0 30px 0 0;
+         text-align: justify;
+      }
+
+      .TextoDescricaoSimbolo {
+         position: relative;
+         color: #555555;
+      }
+
+      .TextoPontuacaoSimbolo {
+         position: relative;
+         font-size: 10px;
+         color: #3e87a8;
+         font-weight: bold;
+      }
+
+      .DivTable {
+         position: relative;
+      }
+
+      .Qualificacao-Detalhe-ComentariosAntigos {
+         width: 99%;
+         height: 100px;
+         background-color: #efefef;
+         border: solid 1px #999999;
+         overflow: scroll;
+         color: #666666;
+         padding: 3px;
+      }
+
+      .Qualificacao-Detalhe-ComentariosAntigos #Data {
+         color: #999999;
+         font-size: 9px;
+      }
+
+      .Positivo {
+         color: #000099;
+         font-weight: bold;
+      }
+
+      .Negativo {
+         color: #990000;
+         font-weight: bold;
+      }
+
+      .Neutro {
+         color: #FF9900;
+         font-weight: bold;
+      }
+
+
+
+      /*GOOGLE*/
+      .cse .gsc-control-cse,
+      .gsc-control-cse {
+         padding: 1em;
+         width: 95% !important;
+      }
+
+      .cse .gsc-branding,
+      .gsc-branding {
+         display: none !important;
+      }
+
+      .cse .gsc-control-cse div,
+      .gsc-control-cse div {
+         position: normal;
+      }
+
+      /* Selector for entire element. */
+      .cse .gsc-control-cse,
+      .gsc-control-cse {
+         background-color: #ffffff;
+         border: 1px solid;
+         border-color: #ffffff;
+      }
+
+      .cse .gsc-control-cse:after,
+      .gsc-control-cse:after {
+         content: ".";
+         display: block;
+         height: 0;
+         clear: both;
+         visibility: hidden;
+      }
+
+      .cse .gsc-resultsHeader,
+      .gsc-resultsHeader {
+         border: block;
+      }
+
+      /* Search button */
+      .cse input.gsc-search-button,
+      input.gsc-search-button {
+         font-family: inherit;
+         color: #fff;
+         background-color: #919191;
+         border: 1px solid #aaa;
+      }
+
+      /* Inactive tab */
+      .cse .gsc-tabHeader.gsc-tabhInactive,
+      .gsc-tabHeader.gsc-tabhInactive {
+         border-bottom: none;
+         color: #666666;
+         background-color: #e9e9e9;
+         border: 1px solid;
+         border-color: #e9e9e9;
+         border-bottom: none;
+      }
+
+      /* Active tab */
+      .cse .gsc-tabHeader.gsc-tabhActive,
+      .gsc-tabHeader.gsc-tabhActive {
+         background-color: #FFFFFF;
+         border: 1px solid;
+         border-top: 2px solid;
+         border-color: #e9e9e9;
+         border-top-color: #FF9900;
+         border-bottom: none;
+      }
+
+      /* This is the tab bar bottom border. */
+      .cse .gsc-tabsArea,
+      .gsc-tabsArea {
+         margin-top: 1em;
+         border-bottom: 1px solid #e9e9e9;
+      }
+
+      /* Inner wrapper for a result */
+      .gs-title,
+      .gs-title * {
+         font-size: 12px !important;
+         color: #f88c40 !important;
+      }
+
+      .gs-title:hover,
+      .gs-title *:hover {
+         color: #3e87a8 !important;
+      }
+
+      .gs-title b {
+         color: #0000cc !important;
+      }
+
+      .cse .gsc-webResult.gsc-result,
+      .gsc-webResult.gsc-result,
+      .gsc-imageResult-column,
+      .gsc-imageResult-classic {
+         padding: .25em;
+         border: 1px solid;
+         border-color: #ffffff;
+         margin-bottom: 1em;
+      }
+
+      /* Result hover event styling */
+      .cse .gsc-webResult.gsc-result:hover,
+      .gsc-webResult.gsc-result:hover,
+      .gsc-results .gsc-imageResult-classic:hover,
+      .gsc-results .gsc-imageResult-column:hover {
+         border: 1px solid;
+         border-color: #FFFFFF;
+      }
+
+      /*Promotion Settings*/
+      /* The entire promo */
+      .cse .gs-promotion,
+      .gs-promotion {
+         background-color: #FFFFFF;
+         border: 1px solid;
+         border-color: #336699;
+      }
+
+      /* Promotion image */
+      .cse .gs-promotion .gs-promotion-image,
+      .gs-promotion .gs-promotion-image {}
+
+      /* Promotion links */
+      .cse .gs-promotion a.gs-title:link,
+      .gs-promotion a.gs-title:link,
+      .cse .gs-promotion a.gs-title:link *,
+      .gs-promotion a.gs-title:link *,
+      .cse .gs-promotion .gs-snippet a:link,
+      .gs-promotion .gs-snippet a:link {
+         color: #0000CC;
+      }
+
+      .cse .gs-promotion a.gs-title:visited,
+      .gs-promotion a.gs-title:visited,
+      .cse .gs-promotion a.gs-title:visited *,
+      .gs-promotion a.gs-title:visited *,
+      .cse .gs-promotion .gs-snippet a:visited,
+      .gs-promotion .gs-snippet a:visited {
+         color: #0000CC;
+      }
+
+      .cse .gs-promotion a.gs-title:hover,
+      .gs-promotion a.gs-title:hover,
+      .cse .gs-promotion a.gs-title:hover *,
+      .gs-promotion a.gs-title:hover *,
+      .cse .gs-promotion .gs-snippet a:hover,
+      .gs-promotion .gs-snippet a:hover {
+         color: #0000CC;
+      }
+
+      .cse .gs-promotion a.gs-title:active,
+      .gs-promotion a.gs-title:active,
+      .cse .gs-promotion a.gs-title:active *,
+      .gs-promotion a.gs-title:active *,
+      .cse .gs-promotion .gs-snippet a:active,
+      .gs-promotion .gs-snippet a:active {
+         color: #0000CC;
+      }
+
+      /* Promotion snippet */
+      .cse .gs-promotion .gs-snippet,
+      .gs-promotion .gs-snippet,
+      .cse .gs-promotion .gs-title .gs-promotion-title-right,
+      .gs-promotion .gs-title .gs-promotion-title-right,
+      .cse .gs-promotion .gs-title .gs-promotion-title-right *,
+      .gs-promotion .gs-title .gs-promotion-title-right * {
+         color: #000000;
+      }
+
+      /* Promotion url */
+      .cse .gs-promotion .gs-visibleUrl,
+      .gs-promotion .gs-visibleUrl {
+         color: #008000;
+      }
+
+      /* Style for auto-completion table
+ * .gsc-completion-selected : styling for a suggested query which the user has moused-over
+ * .gsc-completion-container : styling for the table which contains the completions
+ */
+      .gsc-completion-selected {
+         background: #D5E2FF;
+      }
+
+      .gsc-completion-container {
+         font-family: Arial, sans-serif;
+         font-size: 13px;
+         position: absolute;
+         background: white;
+         border: 1px solid #666666;
+         margin-left: 0;
+         margin-right: 0;
+         /* The top, left, and width are set in JavaScript. */
+      }
+
+      /* Full URL */
+      .gs-webResult div.gs-visibleUrl-short {
+         display: none;
+      }
+
+      .gs-webResult div.gs-visibleUrl-long {
+         display: block !important;
+      }
+
+      .gs-per-result-labels {
+         display: none !important;
+      }
+
+      /*Figuretas*/
+      .plano-figuretas-content {
+         border: solid 1px #ccc;
+         margin: 20px 10px;
+         width: 200px;
+         float: left;
+      }
+
+      .plano-figuretas-content:hover {
+         border: solid 1px #888;
+         width: 200px;
+      }
+
+      .plano-figuretas-content:hover .plano-figuretas-middle {
+         background-color: #ccc;
+      }
+
+      .plano-figuretas-content div {
+         text-align: center;
+         cursor: pointer;
+      }
+
+      .plano-figuretas-top {
+         background-color: #F7F7F7;
+         border-bottom: solid 1px #ccc;
+         font-size: 12px;
+         padding: 10px 3px;
+      }
+
+      .plano-figuretas-middle {
+         border-bottom: solid 1px #ccc;
+         font-size: 25px;
+         font-weight: bold;
+         padding: 20px 0 !important;
+      }
+
+      .plano-figuretas-bottom {
+         background-color: #F7F7F7;
+         font-size: 13px;
+         font-weight: bold;
+         padding: 10px 3px;
+      }
