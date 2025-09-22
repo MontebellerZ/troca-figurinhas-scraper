@@ -7,9 +7,19 @@ const SENHA = process.env.SENHA;
 const COLECIONADORES_FILE = "./colecionadores.json";
 const DIAS_EXPIRACAO_COLECIONADORES_FILE = 1;
 
+type Colecionador = {
+  nick: string;
+  linkPerfil: string;
+  linkFigurinhas: string;
+  frequencia: number;
+  diasUltimoAcesso: number;
+  figurinhas?: string[];
+  repetidas?: string[];
+};
+
 type ColecionadoresSalvos = {
   date: number;
-  colecionadores: string[];
+  colecionadores: Colecionador[];
 };
 
 class TrocaFigurinhas {
@@ -17,37 +27,63 @@ class TrocaFigurinhas {
   browser: Browser;
   page: Page;
 
+  colecionadores: Colecionador[];
+
   constructor() {
     this.inicializado = this.inicializar();
   }
 
-  private async wait(ms: number) {
+  private async wait(ms: number): Promise<void> {
     await new Promise((res) => setTimeout(res, ms));
   }
 
-  private async inicializar() {
+  private async esperarModalRestricao(): Promise<void> {
+    await this.wait(500); // espera o modal de restrição para caso ele aparecer
+
+    const retricaoSelector = "#ctl00_upRestricao";
+    const restricao = await this.page.$(retricaoSelector);
+    if (!restricao) return;
+
+    await restricao.evaluate((el: HTMLDivElement) => (el.style.display = "none"));
+  }
+
+  private async goto(...args: Parameters<Page["goto"]>): ReturnType<Page["goto"]> {
+    const resp = await this.page.goto(...args);
+    await this.esperarModalRestricao();
+    return resp;
+  }
+
+  private async waitForNavigation(
+    ...args: Parameters<Page["waitForNavigation"]>
+  ): ReturnType<Page["waitForNavigation"]> {
+    const resp = await this.page.waitForNavigation(...args);
+    await this.esperarModalRestricao();
+    return resp;
+  }
+
+  private async inicializar(): Promise<void> {
     this.browser = await puppeteer.launch({
       headless: false,
       defaultViewport: null,
       args: ["--window-size=1080,720"],
     });
     this.page = (await this.browser.pages())[0];
-    await this.page.goto("https://trocafigurinhas.com/");
+    await this.goto("https://trocafigurinhas.com/");
   }
 
-  async finalizar() {
+  async finalizar(): Promise<void> {
     await this.wait(5000);
     await this.browser.close();
   }
 
-  async login() {
+  async login(): Promise<void> {
     await this.page.locator("#ctl00_lvUser_ucNL_txtLogin").fill(LOGIN);
     await this.page.locator("#ctl00_lvUser_ucNL_txtSenha").fill(SENHA);
     await this.page.locator("#ctl00_lvUser_ucNL_btnLogin").click();
-    await this.page.waitForNavigation();
+    await this.waitForNavigation();
   }
 
-  async selecionarColecionadoresAlbum(album: string) {
+  async selecionarAlbumPagina(album: string): Promise<void> {
     await this.page.locator("#ctl00_CPH_ucFiltrar_AccordionPane1_header > div.Filtro").click();
 
     const selectId = "#ctl00_CPH_ucFiltrar_AccordionPane1_content_ddlAlbuns_ColecionadoresBusca";
@@ -75,22 +111,48 @@ class TrocaFigurinhas {
 
     await this.page.locator("#ctl00_CPH_ucFiltrar_AccordionPane1_content_Button4").click();
 
-    await this.page.waitForNavigation();
+    await this.waitForNavigation();
   }
 
-  async obterLinksColecionadores() {
+  async obterDadosColecionadoresPagina(): Promise<Colecionador[]> {
     const tableId = "#ctl00_CPH_gvColecionadores";
 
     await this.page.waitForSelector(tableId);
 
-    const hrefs = await this.page.$$eval(`${tableId} a.PerfilListas-Figurinhas`, (links) =>
-      links.map((link) => link.href)
+    const perfis: Colecionador[] = await this.page.$$eval(
+      `${tableId} div.PerfilListas-Content:has(a.PerfilListas-Figurinhas)`,
+      (divsPerfil) =>
+        divsPerfil.map((p) => {
+          const nick = p.querySelector("span.LoginPerfil") as HTMLSpanElement;
+          const perfil = p.querySelector(".PerfilListas-Content-Avatar > a") as HTMLAnchorElement;
+          const figurinhas = p.querySelector("a.PerfilListas-Figurinhas") as HTMLAnchorElement;
+          const presenca = Array.from<HTMLDivElement>(p.querySelectorAll(".Presenca > div"));
+
+          const frequencia = presenca.filter(
+            (p) => p.classList.contains("P") || p.classList.contains("PP")
+          ).length;
+
+          const diasUltimoAcesso =
+            frequencia > 0
+              ? presenca.findIndex((p) => p.classList.contains("P") || p.classList.contains("PP"))
+              : null;
+
+          const colecionador: Colecionador = {
+            nick: nick?.innerText,
+            linkPerfil: perfil?.href,
+            linkFigurinhas: figurinhas?.href,
+            frequencia: frequencia,
+            diasUltimoAcesso: diasUltimoAcesso,
+          };
+
+          return colecionador;
+        })
     );
 
-    return hrefs;
+    return perfis;
   }
 
-  async proximaPagina() {
+  async proximaPagina(): Promise<boolean> {
     const tableId = "#ctl00_CPH_gvColecionadores";
 
     await this.page.waitForSelector(tableId);
@@ -105,44 +167,46 @@ class TrocaFigurinhas {
 
     try {
       await nextPageLink.click();
-      await this.page.waitForNavigation({ timeout: 5000 });
+      await this.waitForNavigation({ timeout: 5000 });
     } catch (err) {
       // Tenta ao menos duas vezes
       await nextPageLink.click();
-      await this.page.waitForNavigation();
+      await this.waitForNavigation();
     }
 
     return true;
   }
 
-  async encontrarColecionadores(album: string) {
-    const salvosColecionadores = this.buscarSalvosColecionadores();
-    if (salvosColecionadores) return salvosColecionadores;
+  async encontrarColecionadores(album: string): Promise<Colecionador[]> {
+    this.colecionadores = this.buscarSalvosColecionadores();
+    if (this.colecionadores) return this.colecionadores;
 
-    await this.page.goto(
-      "https://trocafigurinhas.com/colecionadores/localizar-colecionadores.html"
-    );
+    await this.goto("https://trocafigurinhas.com/colecionadores/localizar-colecionadores.html");
 
-    await this.selecionarColecionadoresAlbum(album);
+    await this.selecionarAlbumPagina(album);
 
-    const linksColecionadores = [];
+    this.colecionadores = [];
 
     do {
-      const links = await this.obterLinksColecionadores();
-      linksColecionadores.push(...links);
+      const perfis = await this.obterDadosColecionadoresPagina();
+      this.colecionadores.push(...perfis);
     } while (await this.proximaPagina());
 
-    this.salvarColecionadores(linksColecionadores);
+    this.salvarColecionadores(this.colecionadores);
 
-    return linksColecionadores;
+    return this.colecionadores;
   }
 
-  salvarColecionadores(colecionadores: string[]) {
+  async encontrarFigurinhas(): Promise<Colecionador[]> {
+    return this.colecionadores;
+  }
+
+  salvarColecionadores(colecionadores: Colecionador[]): void {
     const colecionadoresJson: ColecionadoresSalvos = { date: new Date().getTime(), colecionadores };
     fs.writeFileSync(COLECIONADORES_FILE, JSON.stringify(colecionadoresJson, null, 4));
   }
 
-  buscarSalvosColecionadores() {
+  buscarSalvosColecionadores(): Colecionador[] {
     if (!fs.existsSync(COLECIONADORES_FILE)) return null;
 
     const salvos: ColecionadoresSalvos = require(COLECIONADORES_FILE);
