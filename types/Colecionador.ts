@@ -6,5 +6,7 @@ export type Colecionador = {
   linkFigurinhas: string;
   frequencia: number;
   diasUltimoAcesso: number;
+  worth: boolean;
   cruzamento?: CruzamentoVariado;
+  buscaFalhou?: true;
 };
