@@ -1,6 +1,8 @@
 import { Colecionador } from "./Colecionador";
 
 export type ColecionadoresSalvos = {
-  date: number;
-  colecionadores: Colecionador[];
+  [album: string]: {
+    date: number;
+    colecionadores: Colecionador[];
+  };
 };

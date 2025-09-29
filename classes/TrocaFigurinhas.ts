@@ -1,13 +1,15 @@
-import puppeteer, { Browser, BrowserContext, Page } from "puppeteer";
+import puppeteer, { Browser, BrowserContext, Cookie, Page } from "puppeteer";
 import fs from "fs";
 import path from "path";
 import { Colecionador } from "../types/Colecionador";
-import { ColecionadoresSalvos } from "../types/ColecionadoresSalvos";
+import { ColecionadoresSalvos as ColecionadoresAlbumSalvos } from "../types/ColecionadoresSalvos";
 import { CruzamentoVariado } from "../types/CruzamentoVariado";
 import {
   COLECIONADORES_FILE,
   DIAS_EXPIRACAO_COLECIONADORES_FILE,
   LOGIN,
+  PAGINACAO_COLECIONADORES_EVENTTARGET,
+  PAGINACAO_COLECIONADORES_SIZE,
   REGEX_FIGURINHA,
   SENHA,
   TOTAL_WORKERS,
@@ -16,15 +18,26 @@ import {
 } from "../contants/constants";
 import { LINKS } from "../contants/links";
 import { SELECTORS } from "../contants/selectors";
-import ConsoleColors from "../contants/consoleColors";
+import ConsoleColors from "../utils/consoleColors";
+import { ColecionadorPaginacaoBloco } from "../types/ColecionadorPaginacao";
+import { tempoCorrido } from "../utils/tempoCorrido";
+import axios from "axios";
+import { SiteRequest } from "../types/SiteRequest";
+import { PageData } from "../types/PageData";
+import * as cheerio from "cheerio";
+import type { Element as DomElement } from "domhandler";
 
 export default class TrocaFigurinhas {
-  readonly inicializado: Promise<void>;
+  public readonly inicializado: Promise<void>;
 
   private browser: Browser;
   private context: BrowserContext;
   private page: Page;
   private colecionadores: Colecionador[];
+
+  private get cookies(): Promise<Cookie[]> {
+    return this.browser?.cookies();
+  }
 
   constructor(browser?: Browser, url?: string) {
     this.inicializado = browser ? this.reaproveitar(browser, url) : this.inicializar();
@@ -58,7 +71,14 @@ export default class TrocaFigurinhas {
     return resp;
   }
 
+  public async duplicar(url?: string): Promise<TrocaFigurinhas> {
+    const site = new TrocaFigurinhas(this.browser, url || this.page.url());
+    await site.inicializado;
+    return site;
+  }
+
   private async inicializar(): Promise<void> {
+    ConsoleColors.info(`TrocaFigurinhas - Inicializando`);
     this.browser = await puppeteer.launch({
       headless: false,
       defaultViewport: null,
@@ -66,37 +86,53 @@ export default class TrocaFigurinhas {
     });
     this.page = (await this.browser.pages())[0];
     await this.goto(LINKS.base);
+    ConsoleColors.success(`TrocaFigurinhas - Inicializado`);
   }
 
   private async reaproveitar(browser: Browser, url?: string): Promise<void> {
+    ConsoleColors.info(`TrocaFigurinhas - Abrindo nova aba`);
     this.browser = browser;
     this.context = await browser.createBrowserContext();
 
+    ConsoleColors.info(`TrocaFigurinhas - Copiando cookies para nova aba`);
     const cookies = await browser.cookies();
     if (cookies.length > 0) await this.context.setCookie(...cookies);
 
     this.page = await this.context.newPage();
     await this.goto(url || LINKS.base);
+    ConsoleColors.success(`TrocaFigurinhas - Nova aba aberta`);
   }
 
-  async finalizarPage(): Promise<void> {
+  public async finalizarPage(): Promise<void> {
+    ConsoleColors.info(`TrocaFigurinhas - Fechando aba`);
     await this.page.close();
+    ConsoleColors.success(`TrocaFigurinhas - Aba fechada`);
   }
 
-  async finalizar(): Promise<void> {
+  public async finalizar(): Promise<void> {
+    ConsoleColors.info(`TrocaFigurinhas - Finalizando navegador`);
     await this.browser.close();
+    ConsoleColors.success(`TrocaFigurinhas - Navegador finalizado`);
   }
 
-  async login(): Promise<void> {
+  public async login(): Promise<void> {
+    ConsoleColors.info(`TrocaFigurinhas - Realizando login`);
     const selectors = SELECTORS.login;
 
     await this.page.locator(selectors.nick).fill(LOGIN);
     await this.page.locator(selectors.senha).fill(SENHA);
     await this.page.locator(selectors.submit).click();
     await this.waitForNavigation();
+
+    ConsoleColors.info(`TrocaFigurinhas - Definindo cookies para API`);
+    const cookies = await this.cookies;
+    const cookiesString = cookies.map((c) => `${c.name}=${c.value}`).join("; ");
+    axios.defaults.headers["Cookie"] = cookiesString;
+    axios.defaults.headers["Content-Type"] = "application/x-www-form-urlencoded";
+    ConsoleColors.success(`TrocaFigurinhas - Login concluído`);
   }
 
-  private async findAlbumOption(selectSelector: string, album: string) {
+  private async findAlbumOption(selectSelector: string, album: string): Promise<string> {
     const select = await this.page.waitForSelector(selectSelector);
 
     return await select.$$eval(
@@ -112,10 +148,12 @@ export default class TrocaFigurinhas {
   }
 
   private async selecionarAlbumPagina(album: string): Promise<void> {
+    ConsoleColors.info(`Selecionando album na lista de colecionadores`);
     const selectors = SELECTORS.listaColecionadores.filtro;
 
     await this.page.locator(selectors.aba).click();
 
+    ConsoleColors.info(`Buscando album no select`);
     const optionAlbum = await this.findAlbumOption(selectors.select, album);
 
     if (optionAlbum) await this.page.select(selectors.select, optionAlbum);
@@ -123,99 +161,207 @@ export default class TrocaFigurinhas {
 
     await this.wait(2000);
 
+    ConsoleColors.info(`Confirmando busca por album`);
     await this.page.locator(selectors.submit).click();
 
     await this.waitForNavigation();
+    ConsoleColors.success(`Album selecionado`);
   }
 
-  private async obterDadosColecionadoresPagina(): Promise<Colecionador[]> {
-    const tableId = SELECTORS.listaColecionadores.tabela.selector;
-    const table = await this.page.waitForSelector(tableId);
+  private async htmlFromPage(): Promise<cheerio.CheerioAPI> {
+    ConsoleColors.info(`Convertendo puppeteer para cheerio`);
+    const pageHtml = await this.page.content();
+    const html = cheerio.load(pageHtml);
+    ConsoleColors.success(`Conversão concluída de puppeteer para cheerio`);
+    return html;
+  }
 
+  private async obterDadosColecionadoresPagina(html: cheerio.CheerioAPI): Promise<Colecionador[]> {
+    ConsoleColors.info(`Buscando colecionadores da página`);
+    const tableId = SELECTORS.listaColecionadores.tabela.selector;
     const selectors = SELECTORS.listaColecionadores.tabela.colecionador;
 
-    const perfis: Colecionador[] = await table.$$eval(
-      selectors.selector,
-      (divsPerfil, selectors, minFrequencia, maxUltimoAcesso) => {
-        const filterPresenca = (p: HTMLDivElement) =>
-          p.classList.contains("P") || p.classList.contains("PP");
+    const divsPerfil = html(tableId).find(selectors.selector);
 
-        return divsPerfil.map((p) => {
-          const nick = (p.querySelector(selectors.nick) ||
-            p.querySelector(selectors.nick2)) as HTMLSpanElement;
-          const perfil = p.querySelector(selectors.perfil) as HTMLAnchorElement;
-          const figurinhas = p.querySelector(selectors.figurinhas) as HTMLAnchorElement;
-          const presenca = Array.from<HTMLDivElement>(p.querySelectorAll(selectors.presenca));
+    const filterPresenca = (p: DomElement) => {
+      const classes = html(p).attr("class") || "";
+      return classes.includes("P") || classes.includes("PP");
+    };
 
-          const frequencia = presenca.filter(filterPresenca).length;
-          const diasUltimoAcesso = frequencia > 0 ? presenca.findIndex(filterPresenca) : null;
-          const worth = frequencia >= minFrequencia && diasUltimoAcesso <= maxUltimoAcesso;
+    const perfis: Colecionador[] = divsPerfil
+      .map((_, p) => {
+        const cardPerfil = html(p);
 
-          const colecionador: Colecionador = {
-            nick: nick?.innerText,
-            linkPerfil: perfil?.href,
-            linkFigurinhas: figurinhas?.href,
-            frequencia: frequencia,
-            diasUltimoAcesso: diasUltimoAcesso,
-            worth: worth,
-          };
+        const nick = cardPerfil.find(`${selectors.nick}, ${selectors.nick2}`).first().text().trim();
+        const perfil = cardPerfil.find(selectors.perfil).attr("href") || "";
+        const figurinhas = cardPerfil.find(selectors.figurinhas).attr("href") || "";
+        const presenca = cardPerfil.find(selectors.presenca).toArray();
 
-          return colecionador;
-        });
-      },
-      selectors,
-      WORTH_MIN_FREQUENCIA,
-      WORTH_MAX_ULTIMOACESSO
-    );
+        const linkPerfil = perfil.replace("../", LINKS.base);
+        const linkFigurinhas = figurinhas.replace("../", LINKS.base);
 
+        const frequencia = presenca.filter(filterPresenca).length;
+        const diasUltimoAcesso = frequencia > 0 ? presenca.findIndex(filterPresenca) : null;
+        const worth =
+          frequencia >= WORTH_MIN_FREQUENCIA &&
+          diasUltimoAcesso !== null &&
+          diasUltimoAcesso <= WORTH_MAX_ULTIMOACESSO;
+
+        const colecionador: Colecionador = {
+          nick,
+          linkPerfil,
+          linkFigurinhas,
+          frequencia,
+          diasUltimoAcesso,
+          worth,
+        };
+
+        return colecionador;
+      })
+      .get();
+
+    ConsoleColors.success(`Encontrados ${perfis.length} colecionadores na página`);
     return perfis;
   }
 
-  private async proximaPagina(): Promise<boolean> {
-    const tableId = SELECTORS.listaColecionadores.tabela.selector;
-    const table = await this.page.waitForSelector(tableId);
+  private async getPageData(html: cheerio.CheerioAPI): Promise<PageData> {
+    ConsoleColors.info(`Coletando dados do form da página`);
+    const getInputValue = (selector: string): string => {
+      return html(selector).attr("value") || "";
+    };
 
-    const pageSelector = SELECTORS.listaColecionadores.tabela.paginacao.proxima;
+    const selectors = SELECTORS.listaColecionadores.form;
 
-    const nextPageLink = await table.$(pageSelector);
+    const viewState = getInputValue(selectors.viewState);
+    const eventValidation = getInputValue(selectors.eventValidator);
 
-    if (!nextPageLink) return false;
+    const data: PageData = { viewState, eventValidation };
 
-    await this.wait(500);
-
-    try {
-      await nextPageLink.click();
-      await this.waitForNavigation({ timeout: 5000 });
-    } catch (err) {
-      // Tenta ao menos duas vezes
-      await nextPageLink.click();
-      await this.waitForNavigation();
-    }
-
-    return true;
+    ConsoleColors.success(`Dados do form da página coletados`);
+    return data;
   }
 
-  async encontrarColecionadores(album: string): Promise<Colecionador[]> {
-    this.colecionadores = this.buscarSalvosColecionadores();
-    if (this.colecionadores) return this.colecionadores;
+  private async paginasAcessiveisColecionadores(
+    html: cheerio.CheerioAPI
+  ): Promise<ColecionadorPaginacaoBloco> {
+    ConsoleColors.info(`Buscando paginas acessiveis a partir do bloco`);
+    const pageData = await this.getPageData(html);
 
+    const selectors = SELECTORS.listaColecionadores.tabela;
+
+    const table = html(selectors.selector);
+
+    const pagesArgument = table
+      .find(selectors.paginacao.proximasPages)
+      .map(
+        (_, element) =>
+          html(element)
+            .attr("href")
+            ?.match(/Page\$\d+/)?.[0] || null
+      )
+      .get()
+      .filter(Boolean);
+
+    const divisor = PAGINACAO_COLECIONADORES_SIZE - 1;
+
+    const bloco: ColecionadorPaginacaoBloco = {
+      eventValidation: pageData.eventValidation,
+      viewState: pageData.viewState,
+      pageArguments: pagesArgument.slice(0, divisor),
+      nextBlockArgument: pagesArgument.slice(divisor)[0] || null,
+    };
+
+    ConsoleColors.success(`Paginas acessiveis a partir do bloco encontradas`);
+    return bloco;
+  }
+
+  private async paginaColecionadores(
+    bloco: ColecionadorPaginacaoBloco,
+    pageCode: string
+  ): Promise<cheerio.CheerioAPI> {
+    if (!pageCode) return null;
+
+    ConsoleColors.info(`Buscando nova pagina de colecionadores por API`);
+    const data: SiteRequest = {
+      __EVENTTARGET: PAGINACAO_COLECIONADORES_EVENTTARGET,
+      __EVENTARGUMENT: pageCode,
+      __EVENTVALIDATION: bloco.eventValidation,
+      __VIEWSTATE: bloco.viewState,
+      __VIEWSTATEENCRYPTED: "",
+    };
+    const dataString = new URLSearchParams(data).toString();
+
+    const htmlString: string = await axios
+      .post(LINKS.localizarColecionadores, dataString)
+      .then((res) => res.data);
+
+    const html = cheerio.load(htmlString);
+
+    ConsoleColors.success(`Nova pagina de colecionadores encontrada pela API`);
+    return html;
+  }
+
+  private async encontrarColecionadoresPaginas(album: string): Promise<Colecionador[]> {
+    ConsoleColors.info(`Buscando colecionadores online`);
     await this.goto(LINKS.localizarColecionadores);
-
     await this.selecionarAlbumPagina(album);
 
     this.colecionadores = [];
+    const blocos: ColecionadorPaginacaoBloco[] = [];
 
-    do {
-      const perfis = await this.obterDadosColecionadoresPagina();
-      this.colecionadores.push(...perfis);
-    } while (await this.proximaPagina());
+    let proximaPagina = { html: await this.htmlFromPage(), label: "Page$1" };
+    while (proximaPagina.html) {
+      ConsoleColors.info(`Buscando pagina de bloco ${proximaPagina.label}`);
+      const colecionadores = await this.obterDadosColecionadoresPagina(proximaPagina.html);
 
-    this.salvarColecionadores(this.colecionadores);
+      this.colecionadores.push(...colecionadores);
 
+      const bloco = await this.paginasAcessiveisColecionadores(proximaPagina.html);
+
+      blocos.push(bloco);
+
+      ConsoleColors.success(`Pagina de bloco finalizada ${proximaPagina.label}`);
+
+      proximaPagina = {
+        html: await this.paginaColecionadores(bloco, bloco.nextBlockArgument),
+        label: bloco.nextBlockArgument,
+      };
+    }
+
+    for (const bloco of blocos) {
+      for (const pageArgument of bloco.pageArguments) {
+        ConsoleColors.info(`Buscando pagina normal ${pageArgument}`);
+        const pagina = await this.paginaColecionadores(bloco, pageArgument);
+
+        const colecionadores = await this.obterDadosColecionadoresPagina(pagina);
+
+        this.colecionadores.push(...colecionadores);
+        ConsoleColors.success(`Pagina normal finalizada ${pageArgument}`);
+      }
+    }
+
+    ConsoleColors.success(`Encontrados colecionadores online`);
+    return this.colecionadores;
+  }
+
+  public async encontrarColecionadores(album: string): Promise<Colecionador[]> {
+    ConsoleColors.info(`Buscando colecionadores do album ${album}`);
+    if (this.buscarSalvosColecionadores(album)) {
+      ConsoleColors.success(`Encontrados colecionadores do album ${album} já salvos`);
+      return this.colecionadores;
+    }
+
+    await this.encontrarColecionadoresPaginas(album);
+
+    ConsoleColors.info(`Salvando colecionadores online para local`);
+    this.salvarColecionadores(this.colecionadores, album);
+
+    ConsoleColors.success(`Encontrados colecionadores do album ${album}`);
     return this.colecionadores;
   }
 
   private async selecionarAlbumPerfil(album: string) {
+    ConsoleColors.info(`Selecionando album no perfil do colecionador`);
     const selectors = SELECTORS.colecionador.albuns;
 
     await this.page.locator(selectors.trocarAlbum).click();
@@ -225,13 +371,16 @@ export default class TrocaFigurinhas {
       if (option) {
         await this.page.select(selectSelector, option);
         await this.wait(2000);
+        ConsoleColors.info(`Confirmando busca por album`);
         await this.page.locator(submitSelector).click();
         await this.waitForNavigation();
+        ConsoleColors.success(`Album selecionado`);
         return true;
       }
       return false;
     };
 
+    ConsoleColors.info(`Buscando album nos selects`);
     const selecionadoIncompleto = await selecionar(
       selectors.selectIncompletos,
       selectors.submitIncompletos
@@ -248,9 +397,8 @@ export default class TrocaFigurinhas {
   }
 
   private async verificarCruzamentoVariado(): Promise<CruzamentoVariado> {
+    ConsoleColors.info(`Buscando cruzamento variado do colecionador`);
     const selectors = SELECTORS.colecionador.cruzamento;
-
-    await this.page.locator(selectors.aba).click();
 
     const lerFigurinhas = async (selector: string): Promise<string[]> => {
       const element = await this.page.waitForSelector(selector);
@@ -264,6 +412,7 @@ export default class TrocaFigurinhas {
 
     const cruzamento: CruzamentoVariado = { falta, tem };
 
+    ConsoleColors.success(`Cruzamento variado do encontrado`);
     return cruzamento;
   }
 
@@ -271,7 +420,7 @@ export default class TrocaFigurinhas {
     colecionadores: Colecionador[],
     album: string
   ): Promise<void> {
-    const duracao = (t: Date) => `${((Date.now() - t.valueOf()) / 1000).toFixed(2)}s`;
+    const site = await this.duplicar().catch(this.duplicar); // tenta ao menos duas vezes
 
     while (colecionadores.length) {
       const inicio = new Date();
@@ -279,30 +428,26 @@ export default class TrocaFigurinhas {
       const colecionador = colecionadores.shift();
 
       if (colecionador.buscaFalhou) {
-        ConsoleColors.info(`Figurinhas - Repetindo: ${colecionador.nick}`, ConsoleColors.FgYellow);
+        ConsoleColors.warn(`Figurinhas - Repetindo: ${colecionador.nick}`);
       } else {
-        ConsoleColors.info(`Figurinhas - Iniciando: ${colecionador.nick}`, ConsoleColors.FgCyan);
+        ConsoleColors.info(`Figurinhas - Iniciando: ${colecionador.nick}`);
       }
 
       try {
-        await this.goto(colecionador.linkFigurinhas);
+        await site.goto(colecionador.linkFigurinhas);
 
-        await this.selecionarAlbumPerfil(album);
+        await site.selecionarAlbumPerfil(album);
 
-        const cruzamento = await this.verificarCruzamentoVariado();
+        const cruzamento = await site.verificarCruzamentoVariado();
 
         colecionador.cruzamento = cruzamento;
         colecionador.buscaFalhou = undefined;
 
-        ConsoleColors.info(
-          `Figurinhas - Finalizado: ${colecionador.nick} - ${duracao(inicio)}`,
-          ConsoleColors.FgGreen
+        ConsoleColors.success(
+          `Figurinhas - Finalizado: ${colecionador.nick} - ${tempoCorrido(inicio)}`
         );
       } catch (err) {
-        ConsoleColors.error(
-          `Figurinhas - Erro: ${colecionador.nick} - ${duracao(inicio)}`,
-          ConsoleColors.FgRed
-        );
+        ConsoleColors.error(`Figurinhas - Erro: ${colecionador.nick} - ${tempoCorrido(inicio)}`);
 
         if (colecionador.buscaFalhou) continue;
 
@@ -311,37 +456,47 @@ export default class TrocaFigurinhas {
       }
     }
 
-    await this.finalizarPage();
+    await site.finalizarPage();
   }
 
-  async encontrarFigurinhas(album: string): Promise<Colecionador[]> {
+  public async encontrarFigurinhas(album: string): Promise<Colecionador[]> {
     if (!this.colecionadores) return;
 
+    ConsoleColors.info(`Buscando figurinhas dos colecionadores`);
     const worth = this.colecionadores.filter((c) => c.worth);
-    const sites = new Array(TOTAL_WORKERS).fill(0).map(() => new TrocaFigurinhas(this.browser));
 
-    await Promise.all(sites.map(async (s) => await s.inicializado));
-
-    const buscas = sites.map(async (site) => await site.workerEncontrarFigurinhas(worth, album));
+    const buscas = Array.from({ length: TOTAL_WORKERS }).map(() =>
+      this.workerEncontrarFigurinhas(worth, album)
+    );
 
     await Promise.all(buscas);
 
-    this.salvarColecionadores(this.colecionadores);
+    ConsoleColors.info(`Salvando figurinhas dos colecionadores`);
+    this.salvarColecionadores(this.colecionadores, album);
+
+    ConsoleColors.success(`Figurinhas dos colecionadores salvas`);
   }
 
-  private salvarColecionadores(colecionadores: Colecionador[]): void {
-    const colecionadoresJson: ColecionadoresSalvos = { date: new Date().getTime(), colecionadores };
+  private salvarColecionadores(colecionadores: Colecionador[], album: string): void {
+    const colecionadoresAlbum: ColecionadoresAlbumSalvos = fs.existsSync(COLECIONADORES_FILE)
+      ? require(COLECIONADORES_FILE)
+      : {};
+
+    colecionadoresAlbum[album] = { date: Date.now(), colecionadores };
 
     const dir = path.dirname(COLECIONADORES_FILE);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-    fs.writeFileSync(COLECIONADORES_FILE, JSON.stringify(colecionadoresJson, null, 2));
+    fs.writeFileSync(COLECIONADORES_FILE, JSON.stringify(colecionadoresAlbum, null, 2));
   }
 
-  private buscarSalvosColecionadores(): Colecionador[] {
+  private buscarSalvosColecionadores(album: string): Colecionador[] {
     if (!fs.existsSync(COLECIONADORES_FILE)) return null;
 
-    const salvos: ColecionadoresSalvos = require(COLECIONADORES_FILE);
+    const colecionadoresAlbum: ColecionadoresAlbumSalvos = require(COLECIONADORES_FILE);
+
+    const salvos = colecionadoresAlbum[album];
+    if (!salvos) return null;
 
     const dataSalvos = new Date(salvos.date);
     dataSalvos.setDate(dataSalvos.getDate() + DIAS_EXPIRACAO_COLECIONADORES_FILE);
@@ -349,6 +504,9 @@ export default class TrocaFigurinhas {
     if (dataSalvos <= new Date()) return null;
 
     salvos.colecionadores.forEach((c) => (c.buscaFalhou = undefined));
-    return salvos.colecionadores;
+
+    this.colecionadores = salvos.colecionadores;
+
+    return this.colecionadores;
   }
 }

@@ -1,5 +1,6 @@
 import "dotenv/config";
 import TrocaFigurinhas from "./classes/TrocaFigurinhas";
+import ConsoleColors from "./utils/consoleColors";
 
 async function main() {
   const site = new TrocaFigurinhas();
@@ -9,7 +10,7 @@ async function main() {
 
   const album = "Hello Kitty and Friends";
 
-  const colecionadores = await site.encontrarColecionadores(album);
+  await site.encontrarColecionadores(album);
 
   await site.encontrarFigurinhas(album);
 
@@ -17,5 +18,8 @@ async function main() {
 }
 
 main()
-  .then(() => console.info("Finalizado com sucesso"))
-  .catch((err) => console.error("Finalizado com erro: ", err));
+  .then(() => ConsoleColors.info("Finalizado com sucesso"))
+  .catch((err) => {
+    ConsoleColors.error(`Finalizado com erro: ${err}`);
+    throw err;
+  });

@@ -8,6 +8,11 @@ export const SELECTORS = {
   },
 
   listaColecionadores: {
+    form: {
+      viewState: "input#__VIEWSTATE",
+      eventValidator: "input#__EVENTVALIDATION",
+    },
+
     filtro: {
       aba: "#ctl00_CPH_ucFiltrar_AccordionPane1_header > div.Filtro",
       select: "#ctl00_CPH_ucFiltrar_AccordionPane1_content_ddlAlbuns_ColecionadoresBusca",
@@ -27,6 +32,8 @@ export const SELECTORS = {
       },
 
       paginacao: {
+        totalColecionadores: "tr.gvFooterStylePadrao td",
+        proximasPages: "tr.gvPagerPadrao td:has(span) ~ td > a",
         proxima: "tr.gvPagerPadrao td:has(span) + td > a",
       },
     },

@@ -28,18 +28,27 @@ export default class ConsoleColors {
   public static readonly BgGray = "\x1b[100m";
 
   private static generateText(text: string, ...colors: string[]): string {
-    return [colors.join(""), text, this.Reset].join("");
+    const time = new Date().toLocaleTimeString();
+    return [colors.join(""), `[${time}]\t ${text}`, this.Reset].join("");
   }
 
   public static log(...params: Parameters<typeof this.generateText>) {
     console.log(this.generateText(...params));
   }
 
+  public static success(...params: Parameters<typeof this.generateText>) {
+    console.info(this.generateText(params[0], ConsoleColors.FgGreen, ...params.slice(1)));
+  }
+
   public static info(...params: Parameters<typeof this.generateText>) {
-    console.info(this.generateText(...params));
+    console.info(this.generateText(params[0], ConsoleColors.FgCyan, ...params.slice(1)));
+  }
+
+  public static warn(...params: Parameters<typeof this.generateText>) {
+    console.warn(this.generateText(params[0], ConsoleColors.FgYellow, ...params.slice(1)));
   }
 
   public static error(...params: Parameters<typeof this.generateText>) {
-    console.error(this.generateText(...params));
+    console.error(this.generateText(params[0], ConsoleColors.FgRed, ...params.slice(1)));
   }
 }
